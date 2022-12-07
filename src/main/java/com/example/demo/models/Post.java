@@ -1,26 +1,30 @@
 package com.example.demo.models;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Digits;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "post")
 public class Post {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @NotEmpty(message = "Поле не может быть пустым")
-    private String title;
+    @Pattern(regexp = "^[а-яА-Я]+$", message = "Разрешены только буквы кириллицы.")
+    private String name;
 
-    @NotEmpty(message = "Поле не может быть пустым")
-    private String anons;
+    @Max(value=100000, message="Значение в поле не может быть больше 100000")
+    @Digits(integer = 6, fraction = 0)
+    private  Double salary;
 
-    @NotEmpty(message = "Поле не может быть пустым")
-    private String full_text;
-
-    private int views;
+    //связь с сотрудником
+    @ManyToMany(mappedBy = "posts", fetch = FetchType.LAZY)
+    private Set<Employee> employees = new HashSet<>();
 
     public Post() {
     }
@@ -33,35 +37,28 @@ public class Post {
         this.id = id;
     }
 
-    public String getTitle() {
-        return title;
+
+    public Double getSalary() {
+        return salary;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
+    public String getName() {
+        return name;
     }
 
-    public String getAnons() {
-        return anons;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public void setAnons(String anons) {
-        this.anons = anons;
+    public void setSalary(Double salary) {
+        this.salary = salary;
     }
 
-    public String getFull_text() {
-        return full_text;
+    public Set<Employee> getEmployees() {
+        return employees;
     }
 
-    public void setFull_text(String full_text) {
-        this.full_text = full_text;
-    }
-
-    public int getViews() {
-        return views;
-    }
-
-    public void setViews(int views) {
-        this.views = views;
+    public void setEmployees(Set<Employee> employees) {
+        this.employees = employees;
     }
 }
